@@ -2,13 +2,13 @@
 @section('title', 'Simple CRUD (Modal)')
 
 @section('toolbar')
-    <div class="bg-white border-bottom px-4 py-3">
+    <div class="page-toolbar">
         <div class="container-fluid d-flex align-items-center justify-content-between">
             <div>
-                <h5 class="mb-0">Items</h5>
-                <small class="text-muted">Simple Modal CRUD - Create, Edit, Delete via Bootstrap Modal</small>
+                <h5>Simple CRUD</h5>
+                <small class="text-muted">Modal-based Create, Edit, Delete with AJAX DataTable</small>
             </div>
-            <div>
+            <div class="d-flex align-items-center gap-2">
                 <button id="add_item_btn" class="btn btn-primary btn-sm">
                     <i class="bi bi-plus-lg me-1"></i> Add New Item
                 </button>
@@ -22,15 +22,18 @@
     <div class="card">
         <div class="card-header d-flex align-items-center justify-content-between">
             <h6 class="mb-0">Items List</h6>
-            <div class="d-flex align-items-center">
-                <input type="text" class="form-control form-control-sm" placeholder="Search..."
-                       data-table-filter="search" style="width: 200px;"/>
+            <div class="d-flex align-items-center gap-2">
+                <div class="position-relative">
+                    <i class="bi bi-search position-absolute" style="left:10px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:.8rem;"></i>
+                    <input type="text" class="form-control form-control-sm" placeholder="Search items..."
+                           data-table-filter="search" style="width:220px;padding-left:32px;"/>
+                </div>
             </div>
         </div>
-        <div class="card-body">
-            <table id="items_datatable" class="table table-row-bordered table-hover gy-4 gs-4">
+        <div class="card-body p-0">
+            <table id="items_datatable" class="table table-hover mb-0">
                 <thead>
-                <tr class="fw-bold text-muted">
+                <tr>
                     <th>ID</th>
                     <th>Image</th>
                     <th>Name</th>

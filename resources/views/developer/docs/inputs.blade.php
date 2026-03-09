@@ -22,7 +22,7 @@
 <pre><code class="language-markup">&lt;!-- Required field --&gt;
 &lt;div class="_input_group mb-3"&gt;
     &lt;label class="form-label fw-bold required"&gt;Name&lt;/label&gt;
-    &lt;input value="{{ old_value }}" name="name" type="text"
+    &lt;input value="@{{ old_value }}" name="name" type="text"
            class="form-control" placeholder="Enter name"/&gt;
     &lt;div class="_laravel_error text-danger mt-1"&gt;&lt;/div&gt;
 &lt;/div&gt;
@@ -30,7 +30,7 @@
 &lt;!-- Optional field --&gt;
 &lt;div class="_input_group mb-3"&gt;
     &lt;label class="form-label fw-bold"&gt;Details&lt;/label&gt;
-    &lt;textarea name="details" class="form-control" rows="3"&gt;{{ old_value }}&lt;/textarea&gt;
+    &lt;textarea name="details" class="form-control" rows="3"&gt;@{{ old_value }}&lt;/textarea&gt;
     &lt;div class="_laravel_error text-danger mt-1"&gt;&lt;/div&gt;
 &lt;/div&gt;</code></pre>
                 </div>
@@ -155,7 +155,7 @@
 <pre><code class="language-markup">&lt;!-- Hidden input ensures "0" is sent when unchecked --&gt;
 &lt;div class="form-check form-switch"&gt;
     &lt;input name="is_active" type="hidden" value="0"/&gt;
-    &lt;input @if($item && $item->is_active) checked @endif
+    &lt;input @@if($item && $item->is_active) checked @@endif
            name="is_active" class="form-check-input" type="checkbox" value="1"/&gt;
 &lt;/div&gt;</code></pre>
                 </div>
@@ -168,12 +168,12 @@
                     <button class="btn btn-sm btn-light copy-btn"><i class="bi bi-clipboard"></i></button>
 <pre><code class="language-markup">&lt;div class="d-flex gap-3"&gt;
     &lt;div class="form-check"&gt;
-        &lt;input @if($item && $item->gender == 'male') checked @endif
+        &lt;input @@if($item && $item->gender == 'male') checked @@endif
                name="gender" class="form-check-input" type="radio" value="male" id="gender_male"/&gt;
         &lt;label class="form-check-label" for="gender_male"&gt;Male&lt;/label&gt;
     &lt;/div&gt;
     &lt;div class="form-check"&gt;
-        &lt;input @if($item && $item->gender == 'female') checked @endif
+        &lt;input @@if($item && $item->gender == 'female') checked @@endif
                name="gender" class="form-check-input" type="radio" value="female" id="gender_female"/&gt;
         &lt;label class="form-check-label" for="gender_female"&gt;Female&lt;/label&gt;
     &lt;/div&gt;
@@ -195,7 +195,7 @@
                 </div>
                 <div class="code-block">
                     <button class="btn btn-sm btn-light copy-btn"><i class="bi bi-clipboard"></i></button>
-<pre><code class="language-markup">&lt;input value="{{ $item->color ?? '#3b82f6' }}" name="color" type="color"
+<pre><code class="language-markup">&lt;input value="@{{ $item->color ?? '#3b82f6' }}" name="color" type="color"
        class="form-control form-control-color" style="width: 60px; height: 40px;"/&gt;</code></pre>
                 </div>
             </div>
@@ -207,7 +207,7 @@
                     <button class="btn btn-sm btn-light copy-btn"><i class="bi bi-clipboard"></i></button>
 <pre><code class="language-markup">&lt;div class="text-center"&gt;
     &lt;div class="mb-3"&gt;
-        &lt;img id="img_preview" src="{{ $item ? $item->img_url : getDefaultImg() }}"
+        &lt;img id="img_preview" src="@{{ $item ? $item->img_url : getDefaultImg() }}"
              class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;"/&gt;
     &lt;/div&gt;
     &lt;input name="img" type="file" class="form-control" accept="image/*"
