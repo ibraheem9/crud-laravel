@@ -3,91 +3,123 @@
 var dt;
 
 var KTDatatablesServerSide = function() {
-    var table;
 
     var initDatatable = function() {
         dt = $("#items_datatable").DataTable({
-            responsive: true,
+            responsive: false,
             processing: true,
             serverSide: true,
-            order: [[0, 'desc']],
+            order: [[2, 'desc']],
+            stateSave: false,
+            pageLength: 10,
+            dom: '<"d-none"f>rt<"dt-footer d-flex align-items-center justify-content-between px-3 py-3"lip>',
+            language: {
+                processing: '<div class="d-flex align-items-center gap-2"><div class="spinner-border spinner-border-sm text-primary"></div> Loading...</div>',
+                emptyTable: '<div class="text-center py-4 text-muted"><i class="bi bi-inbox fs-3 d-block mb-2"></i>No items found</div>',
+                info: 'Showing _START_ to _END_ of _TOTAL_ entries',
+                paginate: { previous: '<i class="bi bi-chevron-left"></i>', next: '<i class="bi bi-chevron-right"></i>' }
+            },
             ajax: {
                 url: baseUrl + '/developer/simpleCrud/datatable',
             },
             columns: [
-                { data: 'id', name: 'id' },
-                { data: 'img_html', name: 'img' },
-                { data: 'name', name: 'name' },
-                { data: 'details', name: 'details' },
-                { data: 'is_active', name: 'is_active' },
-                { data: 'created_at', name: 'created_at' },
-                { data: null },
+                { data: null, orderable: false, searchable: false },   // expand
+                { data: 'id', orderable: false, searchable: false },   // checkbox
+                { data: 'name', name: 'name' },                       // item (image + name)
+                { data: 'is_active', name: 'is_active' },             // status toggle
+                { data: 'details', name: 'details' },                 // details
+                { data: 'created_at', name: 'created_at' },           // date
+                { data: null, orderable: false, searchable: false },   // actions
             ],
             columnDefs: [
+                // ── Expand Arrow ────────────────────────────
                 {
                     targets: 0,
-                    orderable: true,
-                    render: function(data) {
-                        return '<span class="badge bg-light text-dark">#' + data + '</span>';
+                    className: 'text-center',
+                    render: function(data, type, row) {
+                        return '<span class="row-expand-btn"><i class="bi bi-caret-right-fill"></i></span>';
                     }
                 },
+
+                // ── Checkbox ────────────────────────────────
                 {
                     targets: 1,
-                    orderable: false,
-                    searchable: false,
                     render: function(data, type, row) {
-                        return '<img src="' + (row.img_url || defaultImage) + '" class="rounded" style="width:40px;height:40px;object-fit:cover;" />';
-                    }
-                },
-                {
-                    targets: 2,
-                    orderable: true,
-                    render: function(data) {
-                        return '<span class="fw-bold">' + (data || '---') + '</span>';
-                    }
-                },
-                {
-                    targets: 3,
-                    orderable: false,
-                    render: function(data) {
-                        if (!data) return '---';
-                        return data.length > 50 ? data.substring(0, 50) + '...' : data;
-                    }
-                },
-                {
-                    targets: 4,
-                    orderable: true,
-                    render: function(data, type, row) {
-                        return '<div class="form-check form-switch">' +
-                            '<input onclick="updateItemStatus(\'is_active\', this, ' + row.id + ')" ' +
-                            (data ? 'checked' : '') +
-                            ' class="form-check-input" type="checkbox"/>' +
+                        return '<div class="form-check">' +
+                            '<input class="form-check-input checkbox_id" type="checkbox" value="' + row.id + '" />' +
                             '</div>';
                     }
                 },
+
+                // ── Item Cell (Image + Name + Key) ──────────
                 {
-                    targets: 5,
-                    orderable: true,
-                    render: function(data) {
-                        return helperJS.formatDate(data) || '---';
+                    targets: 2,
+                    render: function(data, type, row) {
+                        var imgUrl = row.img_url || defaultImage;
+                        return '<div class="item-cell">' +
+                            '<img src="' + imgUrl + '" alt="' + (data || '') + '" />' +
+                            '<div>' +
+                            '<div class="item-name">' + (data || '—') + '</div>' +
+                            '<div class="item-sub">' + (row.key || 'ID: ' + row.id) + '</div>' +
+                            '</div>' +
+                            '</div>';
                     }
                 },
+
+                // ── Status Toggle (green check) ────────────
+                {
+                    targets: 3,
+                    className: 'text-center',
+                    render: function(data, type, row) {
+                        var checked = data ? 'checked' : '';
+                        return '<div class="form-check form-switch d-inline-block">' +
+                            '<input onclick="updateItemStatus(\'is_active\', this, ' + row.id + ')" ' +
+                            checked + ' class="form-check-input" type="checkbox" role="switch"/>' +
+                            '</div>';
+                    }
+                },
+
+                // ── Details (truncated) ─────────────────────
+                {
+                    targets: 4,
+                    render: function(data) {
+                        if (!data) return '<span class="text-muted">—</span>';
+                        var decoded = typeof he !== 'undefined' ? he.decode(data) : data;
+                        return '<span class="text-muted">' +
+                            (decoded.length > 40 ? decoded.substring(0, 40) + '...' : decoded) +
+                            '</span>';
+                    }
+                },
+
+                // ── Created Date ────────────────────────────
+                {
+                    targets: 5,
+                    render: function(data) {
+                        return '<span class="text-muted">' + (helperJS.formatDate(data) || '—') + '</span>';
+                    }
+                },
+
+                // ── Action Icons (copy, edit, delete) ───────
                 {
                     targets: -1,
-                    data: null,
-                    orderable: false,
                     className: 'text-end',
                     render: function(data, type, row) {
-                        return '<div class="dropdown">' +
-                            '<button class="btn btn-sm btn-light" data-bs-toggle="dropdown">Actions <i class="bi bi-chevron-down"></i></button>' +
-                            '<ul class="dropdown-menu">' +
-                            '<li><a href="javascript:;" class="dropdown-item edit_btn" data-id="' + row.id + '"><i class="bi bi-pencil me-2"></i>Edit</a></li>' +
-                            '<li><a href="javascript:;" class="dropdown-item delete_btn text-danger" data-id="' + row.id + '"><i class="bi bi-trash me-2"></i>Delete</a></li>' +
-                            '</ul>' +
+                        return '<div class="d-flex align-items-center justify-content-end gap-1">' +
+                            '<a href="javascript:;" class="action-icon copy_btn" data-id="' + row.id + '" title="Duplicate">' +
+                            '<i class="bi bi-copy"></i></a>' +
+                            '<a href="javascript:;" class="action-icon edit_btn" data-id="' + row.id + '" title="Edit">' +
+                            '<i class="bi bi-pencil-square"></i></a>' +
+                            '<a href="javascript:;" class="action-icon danger delete_btn" data-id="' + row.id + '" title="Delete">' +
+                            '<i class="bi bi-trash3"></i></a>' +
                             '</div>';
                     }
                 },
             ],
+            drawCallback: function(settings) {
+                // Update total count in toolbar
+                var total = settings._iRecordsTotal || 0;
+                $('#total_count').html('Total : <span class="fw-bold text-dark">' + total + '</span>');
+            }
         });
 
         dt.on('draw', function() {
@@ -109,13 +141,22 @@ var KTDatatablesServerSide = function() {
         }
     };
 
+    var handleStatusFilter = function() {
+        var statusFilter = document.getElementById('status_filter');
+        if (statusFilter) {
+            statusFilter.addEventListener('change', function() {
+                dt.column(3).search(this.value).draw();
+            });
+        }
+    };
+
     var handleDeleteRows = function() {
         document.querySelectorAll('.delete_btn').forEach(function(btn) {
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
                 var id = this.getAttribute('data-id');
                 helperConfirm.delete(id, 'developer/simpleCrud/delete', function() {
-                    $('#items_datatable').DataTable().ajax.reload();
+                    dt.ajax.reload();
                 });
             });
         });
@@ -131,10 +172,24 @@ var KTDatatablesServerSide = function() {
         });
     };
 
+    var handleSelectAll = function() {
+        var selectAll = document.getElementById('select_all');
+        if (selectAll) {
+            selectAll.addEventListener('change', function() {
+                var isChecked = this.checked;
+                document.querySelectorAll('#items_datatable .checkbox_id').forEach(function(cb) {
+                    cb.checked = isChecked;
+                });
+            });
+        }
+    };
+
     return {
         init: function() {
             initDatatable();
             handleSearchDatatable();
+            handleStatusFilter();
+            handleSelectAll();
         }
     };
 }();
@@ -162,4 +217,9 @@ function updateItemStatus(column, element, id) {
             element.checked = !element.checked;
         }
     });
+}
+
+// Export table (placeholder)
+function exportTable() {
+    toastr.info('Export feature — integrate with DataTables Buttons or server-side export');
 }

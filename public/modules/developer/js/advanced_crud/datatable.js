@@ -3,106 +3,129 @@
 var dt;
 
 var KTDatatablesServerSide = function() {
-    var table;
 
     var initDatatable = function() {
         dt = $("#customers_datatable").DataTable({
-            responsive: true,
+            responsive: false,
             processing: true,
             serverSide: true,
-            order: [[1, 'desc']],
-            select: {
-                style: 'multi',
-                selector: 'td:first-child input[type="checkbox"]',
-                className: 'row-selected'
+            order: [[2, 'desc']],
+            stateSave: false,
+            pageLength: 10,
+            dom: '<"d-none"f>rt<"dt-footer d-flex align-items-center justify-content-between px-3 py-3"lip>',
+            language: {
+                processing: '<div class="d-flex align-items-center gap-2"><div class="spinner-border spinner-border-sm text-primary"></div> Loading...</div>',
+                emptyTable: '<div class="text-center py-4 text-muted"><i class="bi bi-inbox fs-3 d-block mb-2"></i>No customers found</div>',
+                info: 'Showing _START_ to _END_ of _TOTAL_ entries',
+                paginate: { previous: '<i class="bi bi-chevron-left"></i>', next: '<i class="bi bi-chevron-right"></i>' }
             },
             ajax: {
                 url: baseUrl + '/developer/advancedCrud/datatable',
             },
             columns: [
-                { data: 'id', name: 'id' },
-                { data: 'name', name: 'name' },
-                { data: 'civil_id', name: 'civil_id' },
-                { data: 'mobile', name: 'mobile' },
-                { data: 'banned_at', name: 'banned_at' },
-                { data: 'created_at', name: 'created_at' },
-                { data: null },
+                { data: null, orderable: false, searchable: false },   // expand
+                { data: 'id', orderable: false, searchable: false },   // checkbox
+                { data: 'name', name: 'name' },                       // customer
+                { data: 'civil_id', name: 'civil_id' },               // civil id
+                { data: 'mobile', name: 'mobile' },                   // mobile
+                { data: 'banned_at', name: 'banned_at' },             // banned toggle
+                { data: 'created_at', name: 'created_at' },           // date
+                { data: null, orderable: false, searchable: false },   // actions
             ],
             columnDefs: [
+                // ── Expand Arrow ────────────────────────────
                 {
                     targets: 0,
-                    orderable: false,
-                    searchable: false,
-                    render: function(data) {
-                        return '<div class="form-check">' +
-                            '<input class="form-check-input checkbox_id" type="checkbox" value="' + data + '" />' +
-                            '</div>';
+                    className: 'text-center',
+                    render: function() {
+                        return '<span class="row-expand-btn"><i class="bi bi-caret-right-fill"></i></span>';
                     }
                 },
+
+                // ── Checkbox ────────────────────────────────
                 {
                     targets: 1,
-                    orderable: true,
                     render: function(data, type, row) {
-                        var imgUrl = row.img_url || defaultImage;
-                        return '<div class="d-flex align-items-center">' +
-                            '<div class="me-3">' +
-                            '<a href="' + baseUrl + '/developer/advancedCrud/' + row.id + '/show">' +
-                            '<img src="' + imgUrl + '" class="rounded-circle" style="width:40px;height:40px;object-fit:cover;" />' +
-                            '</a>' +
-                            '</div>' +
-                            '<div>' +
-                            '<a href="' + baseUrl + '/developer/advancedCrud/' + row.id + '/show" class="text-dark fw-bold text-hover-primary">' + row.name + '</a>' +
-                            '<br><small class="text-muted">' + (row.email || '') + '</small>' +
-                            '</div>' +
+                        return '<div class="form-check">' +
+                            '<input class="form-check-input checkbox_id" type="checkbox" value="' + row.id + '" />' +
                             '</div>';
                     }
                 },
+
+                // ── Customer Cell (Image + Name + Email) ────
                 {
                     targets: 2,
-                    orderable: true,
-                    render: function(data) { return data || '---'; }
-                },
-                {
-                    targets: 3,
-                    orderable: true,
-                    render: function(data) { return data || '---'; }
-                },
-                {
-                    targets: 4,
-                    orderable: true,
                     render: function(data, type, row) {
-                        return '<div class="form-check form-switch">' +
-                            '<input onclick="updateCustomerStatus(\'banned_at\', this, ' + row.id + ')" ' +
-                            (data ? 'checked' : '') +
-                            ' class="form-check-input" type="checkbox"/>' +
+                        var imgUrl = row.img_url || defaultImage;
+                        return '<div class="customer-cell">' +
+                            '<a href="' + baseUrl + '/developer/advancedCrud/' + row.id + '/show">' +
+                            '<img src="' + imgUrl + '" alt="' + (data || '') + '" />' +
+                            '</a>' +
+                            '<div>' +
+                            '<a href="' + baseUrl + '/developer/advancedCrud/' + row.id + '/show" class="cust-name text-decoration-none">' + (data || '—') + '</a>' +
+                            '<div class="cust-email">' + (row.email || '') + '</div>' +
+                            '</div>' +
                             '</div>';
                     }
                 },
+
+                // ── Civil ID ────────────────────────────────
                 {
-                    targets: 5,
-                    orderable: true,
+                    targets: 3,
                     render: function(data) {
-                        return helperJS.formatDate(data) || '---';
+                        return data || '<span class="text-muted">—</span>';
                     }
                 },
+
+                // ── Mobile ──────────────────────────────────
+                {
+                    targets: 4,
+                    render: function(data) {
+                        return data || '<span class="text-muted">—</span>';
+                    }
+                },
+
+                // ── Banned Toggle ───────────────────────────
+                {
+                    targets: 5,
+                    className: 'text-center',
+                    render: function(data, type, row) {
+                        return '<div class="form-check form-switch d-inline-block">' +
+                            '<input onclick="updateCustomerStatus(\'banned_at\', this, ' + row.id + ')" ' +
+                            (data ? 'checked' : '') +
+                            ' class="form-check-input" type="checkbox" role="switch"/>' +
+                            '</div>';
+                    }
+                },
+
+                // ── Created Date ────────────────────────────
+                {
+                    targets: 6,
+                    render: function(data) {
+                        return '<span class="text-muted">' + (helperJS.formatDate(data) || '—') + '</span>';
+                    }
+                },
+
+                // ── Action Icons ────────────────────────────
                 {
                     targets: -1,
-                    data: null,
-                    orderable: false,
                     className: 'text-end',
                     render: function(data, type, row) {
-                        return '<div class="dropdown">' +
-                            '<button class="btn btn-sm btn-light" data-bs-toggle="dropdown">Actions <i class="bi bi-chevron-down"></i></button>' +
-                            '<ul class="dropdown-menu">' +
-                            '<li><a href="' + baseUrl + '/developer/advancedCrud/' + row.id + '/show" class="dropdown-item"><i class="bi bi-eye me-2"></i>View</a></li>' +
-                            '<li><a href="' + baseUrl + '/developer/advancedCrud/' + row.id + '/edit" class="dropdown-item"><i class="bi bi-pencil me-2"></i>Edit</a></li>' +
-                            '<li><hr class="dropdown-divider"></li>' +
-                            '<li><a href="javascript:;" class="dropdown-item text-danger delete_btn" data-id="' + row.id + '"><i class="bi bi-trash me-2"></i>Delete</a></li>' +
-                            '</ul>' +
+                        return '<div class="d-flex align-items-center justify-content-end gap-1">' +
+                            '<a href="' + baseUrl + '/developer/advancedCrud/' + row.id + '/show" class="action-icon" title="View">' +
+                            '<i class="bi bi-eye"></i></a>' +
+                            '<a href="' + baseUrl + '/developer/advancedCrud/' + row.id + '/edit" class="action-icon" title="Edit">' +
+                            '<i class="bi bi-pencil-square"></i></a>' +
+                            '<a href="javascript:;" class="action-icon danger delete_btn" data-id="' + row.id + '" title="Delete">' +
+                            '<i class="bi bi-trash3"></i></a>' +
                             '</div>';
                     }
                 },
             ],
+            drawCallback: function(settings) {
+                var total = settings._iRecordsTotal || 0;
+                $('#total_count').html('Total : <span class="fw-bold text-dark">' + total + '</span>');
+            }
         });
 
         dt.on('draw', function() {
@@ -130,18 +153,15 @@ var KTDatatablesServerSide = function() {
                 e.preventDefault();
                 var id = this.getAttribute('data-id');
                 helperConfirm.delete(id, 'developer/advancedCrud/delete', function() {
-                    $('#customers_datatable').DataTable().ajax.reload();
+                    dt.ajax.reload();
                 });
             });
         });
     };
 
     var initCheckboxes = function() {
-        var checkboxes = document.querySelectorAll('#customers_datatable .checkbox_id');
-        checkboxes.forEach(function(cb) {
-            cb.addEventListener('change', function() {
-                toggleToolbar();
-            });
+        document.querySelectorAll('#customers_datatable .checkbox_id').forEach(function(cb) {
+            cb.addEventListener('change', function() { toggleToolbar(); });
         });
     };
 
@@ -190,7 +210,7 @@ var KTDatatablesServerSide = function() {
                             success: function(result) {
                                 if (result.status) {
                                     toastr.success(result.msg);
-                                    $('#customers_datatable').DataTable().ajax.reload();
+                                    dt.ajax.reload();
                                     document.getElementById('select_all_checkbox').checked = false;
                                     toggleToolbar();
                                 }
@@ -200,6 +220,14 @@ var KTDatatablesServerSide = function() {
                     }
                 );
             });
+
+            // Type filter
+            var typeFilter = document.getElementById('type_filter');
+            if (typeFilter) {
+                typeFilter.addEventListener('change', function() {
+                    dt.column(2).search(this.value).draw();
+                });
+            }
         }
     };
 }();
