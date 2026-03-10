@@ -12,12 +12,12 @@ var KTDatatablesServerSide = function() {
             order: [[1, 'asc']],
             stateSave: false,
             pageLength: 10,
-            dom: '<"d-none"f>rt<"dt-footer d-flex align-items-center justify-content-between px-3 py-3"lip>',
+            dom: '<"d-none"f>rt<"row mx-2 my-3"<"col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start"li><"col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end"p>>',
             language: {
-                processing: '<div class="d-flex align-items-center gap-2"><div class="spinner-border spinner-border-sm text-primary"></div> Loading...</div>',
+                processing: '<div class="d-flex align-items-center gap-2"><span class="spinner-border w-15px h-15px text-primary"></span> Loading...</div>',
                 emptyTable: '<div class="text-center py-4 text-muted"><i class="bi bi-inbox fs-3 d-block mb-2"></i>No durations found</div>',
-                info: 'Showing _START_ to _END_ of _TOTAL_ entries',
-                paginate: { previous: '<i class="bi bi-chevron-left"></i>', next: '<i class="bi bi-chevron-right"></i>' }
+                info: 'Showing _START_ to _END_ of _TOTAL_',
+                paginate: { previous: '<i class="previous"></i>', next: '<i class="next"></i>' }
             },
             ajax: {
                 url: baseUrl + '/developer/crudWithSort/datatable',
@@ -33,53 +33,56 @@ var KTDatatablesServerSide = function() {
             columnDefs: [
                 {
                     targets: 0,
-                    className: 'text-center',
+                    className: 'w-10px pe-2',
                     render: function() {
-                        return '<span class="row-expand-btn"><i class="bi bi-caret-right-fill"></i></span>';
+                        return '<div class="form-check form-check-sm form-check-custom form-check-solid">' +
+                            '<input class="form-check-input row-checkbox" type="checkbox" value="" />' +
+                            '</div>';
                     }
                 },
                 {
                     targets: 1,
                     className: 'text-center',
                     render: function(data) {
-                        return '<span class="order-badge">' + (data || 0) + '</span>';
+                        return '<span class="badge badge-light-primary fw-bolder fs-7">' + (data || 0) + '</span>';
                     }
                 },
                 {
                     targets: 2,
                     render: function(data) {
-                        return '<span class="fw-semibold text-dark">' + (data || '—') + '</span>';
+                        return '<span class="text-dark fw-bolder text-hover-primary fs-6">' + (data || '—') + '</span>';
                     }
                 },
                 {
                     targets: 3,
                     render: function(data) {
                         if (!data) return '<span class="text-muted">—</span>';
-                        return '<span class="badge" style="background:#f0fdf4;color:#16a34a;font-size:.82rem;font-weight:600;padding:6px 12px;border-radius:6px;">' + data + ' days</span>';
+                        return '<span class="badge badge-light-success fw-bolder">' + data + ' days</span>';
                     }
                 },
                 {
                     targets: 4,
                     render: function(data) {
-                        return '<span class="text-muted">' + (helperJS.formatDate(data) || '—') + '</span>';
+                        return '<span class="text-muted fw-bold">' + (helperJS.formatDate(data) || '—') + '</span>';
                     }
                 },
                 {
                     targets: -1,
                     className: 'text-end',
                     render: function(data, type, row) {
-                        return '<div class="d-flex align-items-center justify-content-end gap-1">' +
-                            '<a href="javascript:;" class="action-icon edit_btn" data-id="' + row.id + '" title="Edit">' +
-                            '<i class="bi bi-pencil-square"></i></a>' +
-                            '<a href="javascript:;" class="action-icon danger delete_btn" data-id="' + row.id + '" title="Delete">' +
-                            '<i class="bi bi-trash3"></i></a>' +
+                        return '<a href="#" class="btn btn-sm btn-light btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">' +
+                            'Actions <span class="svg-icon svg-icon-5 m-0"><i class="bi bi-caret-down-fill"></i></span></a>' +
+                            '<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">' +
+                            '<div class="menu-item px-3"><a href="javascript:;" class="menu-link px-3 edit_btn" data-id="' + row.id + '">Edit</a></div>' +
+                            '<div class="menu-item px-3"><a href="javascript:;" class="menu-link px-3 delete_btn" data-id="' + row.id + '">Delete</a></div>' +
                             '</div>';
                     }
                 },
             ],
             drawCallback: function(settings) {
                 var total = settings._iRecordsTotal || 0;
-                $('#total_count').html('Total : <span class="fw-bold text-dark">' + total + '</span>');
+                $('#total_count').text('Total: ' + total);
+                KTMenu.createInstances();
             }
         });
 

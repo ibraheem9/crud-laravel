@@ -1,189 +1,182 @@
 @extends('layouts.cpanel.app')
 @section('title', 'Dashboard')
-
-@section('style')
-<style>
-    .feature-card {
-        border: 1px solid #e2e8f0; border-radius: 14px; padding: 24px;
-        background: #fff; transition: all 0.2s ease; text-decoration: none; display: block;
-    }
-    .feature-card:hover {
-        border-color: var(--primary); box-shadow: 0 8px 25px -5px rgba(59,130,246,0.12);
-        transform: translateY(-2px);
-    }
-    .feature-icon {
-        width: 48px; height: 48px; border-radius: 12px;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 1.25rem;
-    }
-    .doc-card {
-        border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px;
-        transition: all 0.2s ease; text-decoration: none; display: block; color: inherit;
-    }
-    .doc-card:hover {
-        border-color: #cbd5e1; background: #f8fafc; color: inherit;
-    }
-    .doc-card .doc-icon {
-        width: 40px; height: 40px; border-radius: 10px;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 1.1rem; margin-bottom: 10px;
-    }
-    .welcome-banner {
-        background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #1e40af 100%);
-        border-radius: 16px; padding: 32px; color: #fff; margin-bottom: 28px;
-        position: relative; overflow: hidden;
-    }
-    .welcome-banner::after {
-        content: ''; position: absolute; right: -40px; top: -40px;
-        width: 200px; height: 200px; border-radius: 50%;
-        background: rgba(59,130,246,0.15);
-    }
-    .welcome-banner h2 { font-weight: 700; font-size: 1.5rem; margin-bottom: 8px; }
-    .welcome-banner p { color: #94a3b8; font-size: 0.9rem; margin: 0; max-width: 600px; }
-    .tree-view {
-        background: #0f172a; color: #e2e8f0; border-radius: 12px;
-        padding: 24px; font-family: 'JetBrains Mono', 'Fira Code', monospace;
-        font-size: 0.78rem; line-height: 1.7; overflow-x: auto;
-    }
-    .tree-view .comment { color: #64748b; }
-    .tree-view .folder { color: #60a5fa; }
-    .tree-view .file { color: #94a3b8; }
-    .tree-view .highlight { color: #fbbf24; }
-</style>
-@stop
-
+@section('toolbar')
+    <div class="toolbar" id="kt_toolbar">
+        <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
+            <div data-kt-swapper="true" data-kt-swapper-mode="prepend"
+                 data-kt-swapper-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}"
+                 class="page-title d-flex align-items-center flex-wrap me-3 mb-5 mb-lg-0">
+                <h1 class="d-flex text-dark fw-bolder fs-3 align-items-center my-1">Dashboard
+                    <span class="h-20px border-1 border-gray-200 border-start ms-3 mx-2 me-1"></span>
+                    <span class="text-muted fs-7 fw-bold mt-2">Developer Reference</span>
+                </h1>
+            </div>
+        </div>
+    </div>
+@endsection
 @section('content')
-    {{-- Welcome Banner --}}
-    <div class="welcome-banner">
-        <h2>I7 CRUD Reference Project</h2>
-        <p>A comprehensive Laravel 12 developer toolkit with ready-to-use CRUD patterns, helpers, and documentation. Built for rapid development.</p>
-    </div>
-
-    {{-- CRUD Feature Cards --}}
-    <div class="row g-4 mb-4">
-        <div class="col-md-4">
-            <a href="{{ route('developer.simpleCrud.index') }}" class="feature-card">
-                <div class="feature-icon mb-3" style="background:#eff6ff;color:#3b82f6;">
-                    <i class="bi bi-window-stack"></i>
+    <!--begin::Row - Stats-->
+    <div class="row g-5 g-xl-8 mb-8">
+        <div class="col-xl-4">
+            <a href="{{ url('/developer/simpleCrud') }}" class="card bg-primary hoverable card-xl-stretch mb-xl-8">
+                <div class="card-body">
+                    <i class="bi bi-window-stack text-white fs-2hx"></i>
+                    <div class="text-white fw-bolder fs-2 mb-2 mt-5">Simple CRUD</div>
+                    <div class="fw-bold text-white opacity-75">Modal-based create/edit with DataTable</div>
                 </div>
-                <h6 class="fw-bold mb-1" style="color:#0f172a;">Simple CRUD</h6>
-                <p class="text-muted mb-2" style="font-size:.82rem;">Modal-based create, edit, delete with AJAX DataTable, image upload, and status toggles.</p>
-                <span class="badge" style="background:#eff6ff;color:#3b82f6;font-size:.7rem;">Modal Based</span>
             </a>
         </div>
-        <div class="col-md-4">
-            <a href="{{ route('developer.advancedCrud.index') }}" class="feature-card">
-                <div class="feature-icon mb-3" style="background:#f0fdf4;color:#16a34a;">
-                    <i class="bi bi-person-lines-fill"></i>
+        <div class="col-xl-4">
+            <a href="{{ url('/developer/advancedCrud') }}" class="card bg-info hoverable card-xl-stretch mb-xl-8">
+                <div class="card-body">
+                    <i class="bi bi-layout-text-window-reverse text-white fs-2hx"></i>
+                    <div class="text-white fw-bolder fs-2 mb-2 mt-5">Advanced CRUD</div>
+                    <div class="fw-bold text-white opacity-75">Page-based form with all input types</div>
                 </div>
-                <h6 class="fw-bold mb-1" style="color:#0f172a;">Advanced CRUD</h6>
-                <p class="text-muted mb-2" style="font-size:.82rem;">Full page forms with multi-column layout, image preview, password toggle, multi-delete.</p>
-                <span class="badge" style="background:#f0fdf4;color:#16a34a;font-size:.7rem;">Page Based</span>
             </a>
         </div>
-        <div class="col-md-4">
-            <a href="{{ route('developer.crudWithSort.index') }}" class="feature-card">
-                <div class="feature-icon mb-3" style="background:#fefce8;color:#ca8a04;">
-                    <i class="bi bi-arrow-down-up"></i>
+        <div class="col-xl-4">
+            <a href="{{ url('/developer/crudWithSort') }}" class="card bg-warning hoverable card-xl-stretch mb-xl-8">
+                <div class="card-body">
+                    <i class="bi bi-arrow-down-up text-white fs-2hx"></i>
+                    <div class="text-white fw-bolder fs-2 mb-2 mt-5">CRUD with Sort</div>
+                    <div class="fw-bold text-white opacity-75">Drag & drop sortable items</div>
                 </div>
-                <h6 class="fw-bold mb-1" style="color:#0f172a;">CRUD with Sort</h6>
-                <p class="text-muted mb-2" style="font-size:.82rem;">Drag-and-drop reordering with jQuery UI Sortable, order saved via AJAX.</p>
-                <span class="badge" style="background:#fefce8;color:#ca8a04;font-size:.7rem;">Drag & Drop</span>
             </a>
         </div>
     </div>
+    <!--end::Row-->
 
-    {{-- Documentation Cards --}}
-    <div class="card mb-4">
-        <div class="card-header">
-            <h6><i class="bi bi-book me-2 text-primary"></i>Developer Documentation</h6>
+    <!--begin::Row - Media CRUDs-->
+    <div class="row g-5 g-xl-8 mb-8">
+        <div class="col-xl-4">
+            <a href="{{ url('/developer/media/images') }}" class="card hoverable card-xl-stretch mb-xl-8">
+                <div class="card-body">
+                    <i class="bi bi-image text-success fs-2hx"></i>
+                    <div class="text-dark fw-bolder fs-2 mb-2 mt-5">Single Image</div>
+                    <div class="fw-bold text-muted">FilePond + Doka editor integration</div>
+                </div>
+            </a>
         </div>
-        <div class="card-body">
-            <div class="row g-3">
-                <div class="col-md-4 col-sm-6">
-                    <a href="{{ route('developer.docs.phpHelper') }}" class="doc-card">
-                        <div class="doc-icon" style="background:#fef3c7;color:#d97706;"><i class="bi bi-filetype-php"></i></div>
-                        <h6 style="font-size:.88rem;font-weight:600;margin-bottom:2px;">PHP Helpers</h6>
-                        <small class="text-muted">ApiHelper, FilesHelper, MainHelper</small>
+        <div class="col-xl-4">
+            <a href="{{ url('/developer/media/gallery') }}" class="card hoverable card-xl-stretch mb-xl-8">
+                <div class="card-body">
+                    <i class="bi bi-images text-danger fs-2hx"></i>
+                    <div class="text-dark fw-bolder fs-2 mb-2 mt-5">Image Gallery</div>
+                    <div class="fw-bold text-muted">Multiple images with sortable gallery</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-xl-4">
+            <a href="{{ url('/developer/media/documents') }}" class="card hoverable card-xl-stretch mb-xl-8">
+                <div class="card-body">
+                    <i class="bi bi-file-earmark-text text-primary fs-2hx"></i>
+                    <div class="text-dark fw-bolder fs-2 mb-2 mt-5">Documents</div>
+                    <div class="fw-bold text-muted">PDF, Word, Excel, PowerPoint</div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <!--end::Row-->
+
+    <!--begin::Row - More Media-->
+    <div class="row g-5 g-xl-8 mb-8">
+        <div class="col-xl-4">
+            <a href="{{ url('/developer/media/archives') }}" class="card hoverable card-xl-stretch mb-xl-8">
+                <div class="card-body">
+                    <i class="bi bi-file-earmark-zip text-dark fs-2hx"></i>
+                    <div class="text-dark fw-bolder fs-2 mb-2 mt-5">Archives</div>
+                    <div class="fw-bold text-muted">ZIP & RAR file management</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-xl-4">
+            <a href="{{ url('/developer/media/audios') }}" class="card hoverable card-xl-stretch mb-xl-8">
+                <div class="card-body">
+                    <i class="bi bi-music-note-beamed text-info fs-2hx"></i>
+                    <div class="text-dark fw-bolder fs-2 mb-2 mt-5">Audio</div>
+                    <div class="fw-bold text-muted">Sound files with inline player</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-xl-4">
+            <a href="{{ url('/developer/media/videos') }}" class="card hoverable card-xl-stretch mb-xl-8">
+                <div class="card-body">
+                    <i class="bi bi-camera-video text-warning fs-2hx"></i>
+                    <div class="text-dark fw-bolder fs-2 mb-2 mt-5">Video</div>
+                    <div class="fw-bold text-muted">Video upload with thumbnail</div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <!--end::Row-->
+
+    <!--begin::Row - Documentation-->
+    <div class="card mb-8">
+        <div class="card-header border-0 pt-5">
+            <h3 class="card-title align-items-start flex-column">
+                <span class="card-label fw-bolder fs-3 mb-1">Documentation</span>
+                <span class="text-muted mt-1 fw-bold fs-7">Developer guides and references</span>
+            </h3>
+        </div>
+        <div class="card-body py-3">
+            <div class="row g-5">
+                <div class="col-md-4">
+                    <a href="{{ url('/developer/docs/php-helper') }}" class="d-flex align-items-center bg-light-primary rounded p-5 mb-5">
+                        <i class="bi bi-filetype-php text-primary fs-2hx me-5"></i>
+                        <div class="flex-grow-1 me-2">
+                            <span class="fw-bolder text-gray-800 fs-6">PHP Helpers</span>
+                            <span class="text-muted fw-bold d-block">ApiHelper, FilesHelper, MainHelper</span>
+                        </div>
                     </a>
                 </div>
-                <div class="col-md-4 col-sm-6">
-                    <a href="{{ route('developer.docs.jsHelper') }}" class="doc-card">
-                        <div class="doc-icon" style="background:#fef9c3;color:#a16207;"><i class="bi bi-filetype-js"></i></div>
-                        <h6 style="font-size:.88rem;font-weight:600;margin-bottom:2px;">JS Helpers (I7)</h6>
-                        <small class="text-muted">helperForm, helperSwal, helperConfirm</small>
+                <div class="col-md-4">
+                    <a href="{{ url('/developer/docs/js-helper') }}" class="d-flex align-items-center bg-light-info rounded p-5 mb-5">
+                        <i class="bi bi-filetype-js text-info fs-2hx me-5"></i>
+                        <div class="flex-grow-1 me-2">
+                            <span class="fw-bolder text-gray-800 fs-6">JS Helpers (I7)</span>
+                            <span class="text-muted fw-bold d-block">helperForm, helperSwal, helperConfirm</span>
+                        </div>
                     </a>
                 </div>
-                <div class="col-md-4 col-sm-6">
-                    <a href="{{ route('developer.docs.datatable') }}" class="doc-card">
-                        <div class="doc-icon" style="background:#e0f2fe;color:#0284c7;"><i class="bi bi-table"></i></div>
-                        <h6 style="font-size:.88rem;font-weight:600;margin-bottom:2px;">DataTable Guide</h6>
-                        <small class="text-muted">Yajra Server-side, Columns, Actions</small>
+                <div class="col-md-4">
+                    <a href="{{ url('/developer/docs/datatable') }}" class="d-flex align-items-center bg-light-success rounded p-5 mb-5">
+                        <i class="bi bi-table text-success fs-2hx me-5"></i>
+                        <div class="flex-grow-1 me-2">
+                            <span class="fw-bolder text-gray-800 fs-6">DataTable Guide</span>
+                            <span class="text-muted fw-bold d-block">Yajra server-side DataTables</span>
+                        </div>
                     </a>
                 </div>
-                <div class="col-md-4 col-sm-6">
-                    <a href="{{ route('developer.docs.ajax') }}" class="doc-card">
-                        <div class="doc-icon" style="background:#f0fdf4;color:#16a34a;"><i class="bi bi-arrow-repeat"></i></div>
-                        <h6 style="font-size:.88rem;font-weight:600;margin-bottom:2px;">AJAX Patterns</h6>
-                        <small class="text-muted">Store, Update, Delete, Status Toggle</small>
+                <div class="col-md-4">
+                    <a href="{{ url('/developer/docs/ajax') }}" class="d-flex align-items-center bg-light-warning rounded p-5 mb-5">
+                        <i class="bi bi-arrow-repeat text-warning fs-2hx me-5"></i>
+                        <div class="flex-grow-1 me-2">
+                            <span class="fw-bolder text-gray-800 fs-6">AJAX Patterns</span>
+                            <span class="text-muted fw-bold d-block">Form submission, status toggle</span>
+                        </div>
                     </a>
                 </div>
-                <div class="col-md-4 col-sm-6">
-                    <a href="{{ route('developer.docs.inputs') }}" class="doc-card">
-                        <div class="doc-icon" style="background:#fce7f3;color:#db2777;"><i class="bi bi-input-cursor-text"></i></div>
-                        <h6 style="font-size:.88rem;font-weight:600;margin-bottom:2px;">Input Components</h6>
-                        <small class="text-muted">Masks, Pickers, Select2, Switches</small>
+                <div class="col-md-4">
+                    <a href="{{ url('/developer/docs/inputs') }}" class="d-flex align-items-center bg-light-danger rounded p-5 mb-5">
+                        <i class="bi bi-input-cursor-text text-danger fs-2hx me-5"></i>
+                        <div class="flex-grow-1 me-2">
+                            <span class="fw-bolder text-gray-800 fs-6">Input Components</span>
+                            <span class="text-muted fw-bold d-block">All input types reference</span>
+                        </div>
                     </a>
                 </div>
-                <div class="col-md-4 col-sm-6">
-                    <a href="{{ route('developer.docs.layout') }}" class="doc-card">
-                        <div class="doc-icon" style="background:#f1f5f9;color:#475569;"><i class="bi bi-layout-sidebar-inset"></i></div>
-                        <h6 style="font-size:.88rem;font-weight:600;margin-bottom:2px;">Layout Guide</h6>
-                        <small class="text-muted">Blade structure, Sections, Patterns</small>
+                <div class="col-md-4">
+                    <a href="{{ url('/developer/docs/layout') }}" class="d-flex align-items-center bg-light-dark rounded p-5 mb-5">
+                        <i class="bi bi-layout-sidebar text-dark fs-2hx me-5"></i>
+                        <div class="flex-grow-1 me-2">
+                            <span class="fw-bolder text-gray-800 fs-6">Layout Guide</span>
+                            <span class="text-muted fw-bold d-block">Metronic 8 layout structure</span>
+                        </div>
                     </a>
                 </div>
             </div>
         </div>
     </div>
-
-    {{-- Project Structure --}}
-    <div class="card">
-        <div class="card-header">
-            <h6><i class="bi bi-folder2-open me-2 text-primary"></i>Project Structure</h6>
-        </div>
-        <div class="card-body p-0">
-            <div class="tree-view">
-<pre style="margin:0;font-family:inherit;">
-<span class="folder">crud-laravel/</span>
-├── <span class="folder">app/</span>
-│   ├── <span class="folder">Helpers/</span>
-│   │   ├── <span class="file">ApiHelper.php</span>          <span class="comment"># sendResponse(), getRealIpAddr()</span>
-│   │   ├── <span class="file">FilesHelper.php</span>        <span class="comment"># uploadImage(), getImageUrl(), deleteFile()</span>
-│   │   └── <span class="file">MainHelper.php</span>         <span class="comment"># dateFormat(), generateHashID()</span>
-│   ├── <span class="folder">Http/</span>
-│   │   ├── <span class="folder">Controllers/Developer/</span>
-│   │   │   ├── <span class="file">SimpleCrudController.php</span>     <span class="comment"># Modal-based CRUD</span>
-│   │   │   ├── <span class="file">AdvancedCrudController.php</span>   <span class="comment"># Page-based CRUD</span>
-│   │   │   ├── <span class="file">CrudWithSortController.php</span>   <span class="comment"># Sortable CRUD</span>
-│   │   │   ├── <span class="file">DashboardController.php</span>
-│   │   │   └── <span class="file">DocsController.php</span>
-│   │   └── <span class="folder">Requests/Developer/</span>
-│   │       ├── <span class="file">SaveSimpleCrudRequest.php</span>
-│   │       ├── <span class="file">SaveAdvancedCrudRequest.php</span>
-│   │       └── <span class="file">SaveCrudWithSortRequest.php</span>
-│   └── <span class="folder">Models/Developer/</span>
-│       ├── <span class="file">SimpleCrud.php</span>
-│       ├── <span class="file">AdvancedCrud.php</span>
-│       └── <span class="file">CrudWithSort.php</span>
-├── <span class="folder">resources/</span>
-│   ├── <span class="highlight">I7_Helpers/</span>                <span class="comment"># Original I7 JS helpers</span>
-│   └── <span class="folder">views/</span>
-│       ├── <span class="folder">layouts/cpanel/</span>        <span class="comment"># Main layout with sidebar</span>
-│       └── <span class="folder">developer/</span>             <span class="comment"># All CRUD views + docs</span>
-├── <span class="folder">public/modules/developer/js/</span>   <span class="comment"># Page-specific JS files</span>
-└── <span class="file">routes/web.php</span>                 <span class="comment"># All routes</span>
-</pre>
-            </div>
-        </div>
-    </div>
-@stop
+    <!--end::Row-->
+@endsection

@@ -2,8 +2,8 @@
 
 var item_modal;
 
-$(document).ready(function() {
-    item_modal = new bootstrap.Modal(document.getElementById('item_modal'), { keyboard: false });
+$(document).ready(function () {
+    item_modal = new bootstrap.Modal(document.getElementById('item_modal'), {keyboard: false});
 });
 
 // Open the save modal (create or edit)
@@ -12,16 +12,14 @@ function openSaveModal(id) {
     $.ajax({
         url: baseUrl + '/developer/simpleCrud/save/' + id,
         type: 'GET',
-        success: function(result) {
+        success: function (result) {
             if (result.status) {
-                $('#item_modal_content').html(result.data);
+                $('#item_modal .modal-content').html(result.data);
                 item_modal.show();
                 initSaveForm();
-                // Re-init inputs after modal load
-                CpanelApp.init();
             }
         },
-        error: function(error) {
+        error: function (error) {
             helperSwal.exception(error);
         }
     });
@@ -31,7 +29,7 @@ function openSaveModal(id) {
 function initSaveForm() {
     var formHtml = $("#item_form");
 
-    formHtml.off('submit').on('submit', function(e) {
+    formHtml.off('submit').on('submit', function (e) {
         e.preventDefault();
         saveItem(this);
     });
@@ -53,17 +51,17 @@ function saveItem(form) {
         processData: false,
         data: form_data,
         btn: $('#save_item_btn'),
-        success: function(result) {
+        success: function (result) {
             if (result.status) {
                 toastr.success(result.msg);
-                $('#items_datatable').DataTable().ajax.reload();
+                dt.ajax.reload();
                 item_modal.hide();
                 helperForm.resetForm('#item_form');
             } else {
                 toastr.error(result.msg);
             }
         },
-        error: function(jqXHR) {
+        error: function (jqXHR) {
             if (jqXHR.responseJSON && jqXHR.responseJSON.errors) {
                 helperForm.showValidationErrors(jqXHR.responseJSON.errors, '#item_form');
             } else {
@@ -73,7 +71,6 @@ function saveItem(form) {
     });
 }
 
-// Add button click handler
-$(document).on('click', '#add_item_btn', function() {
+function resetForm() {
     openSaveModal(0);
-});
+}

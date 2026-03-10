@@ -1,20 +1,31 @@
-<div class="header-bar">
-    <button class="btn btn-sm btn-icon d-lg-none me-3" onclick="toggleSidebar()">
-        <i class="bi bi-list fs-4"></i>
-    </button>
-    <div class="d-flex align-items-center">
-        <span class="page-title">@yield('title', 'Dashboard')</span>
-    </div>
-    <div class="ms-auto d-flex align-items-center gap-2 header-badges">
-        <span class="badge" style="background:#eff6ff;color:#3b82f6;">
-            <i class="bi bi-box me-1"></i> Laravel {{ app()->version() }}
-        </span>
-        <span class="badge" style="background:#f0fdf4;color:#16a34a;">
-            <i class="bi bi-filetype-php me-1"></i> PHP {{ phpversion() }}
-        </span>
-        <a href="https://github.com/ibraheem9/crud-laravel" target="_blank"
-           class="badge text-decoration-none" style="background:#f1f5f9;color:#334155;">
-            <i class="bi bi-github me-1"></i> GitHub
-        </a>
+<div id="kt_header" style="" class="header align-items-stretch">
+    <div class="container-fluid d-flex align-items-stretch justify-content-between">
+        <!--begin::Aside mobile toggle-->
+        <div class="d-flex align-items-center d-lg-none ms-n3 me-1" title="Show aside menu">
+            <div class="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px" id="kt_aside_mobile_toggle">
+                <span class="svg-icon svg-icon-2x mt-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M21 7H3C2.4 7 2 6.6 2 6V4C2 3.4 2.4 3 3 3H21C21.6 3 22 3.4 22 4V6C22 6.6 21.6 7 21 7Z" fill="currentColor"/>
+                        <path opacity="0.3" d="M21 14H3C2.4 14 2 13.6 2 13V11C2 10.4 2.4 10 3 10H21C21.6 10 22 10.4 22 11V13C22 13.6 21.6 14 21 14ZM22 20V18C22 17.4 21.6 17 21 17H3C2.4 17 2 17.4 2 18V20C2 20.6 2.4 21 3 21H21C21.6 21 22 20.6 22 20Z" fill="currentColor"/>
+                    </svg>
+                </span>
+            </div>
+        </div>
+        <!--end::Aside mobile toggle-->
+        <!--begin::Wrapper-->
+        <div class="d-flex align-items-stretch justify-content-between flex-lg-grow-1">
+            <!--begin::Navbar-->
+            <div class="d-flex align-items-stretch" id="kt_header_nav">
+            </div>
+            <!--end::Navbar-->
+            <!--begin::Topbar-->
+            <div class="d-flex align-items-stretch flex-shrink-0">
+                <div class="d-flex align-items-stretch flex-shrink-0">
+                    @include('layouts.cpanel.header.theme_mode')
+                </div>
+            </div>
+            <!--end::Topbar-->
+        </div>
+        <!--end::Wrapper-->
     </div>
 </div>
