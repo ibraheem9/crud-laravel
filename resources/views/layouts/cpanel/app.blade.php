@@ -249,6 +249,7 @@
         }
     </style>
     @yield('style')
+    @yield('styles')
 </head>
 <body>
 
@@ -337,6 +338,7 @@
 </script>
 
 @yield('script')
+@yield('scripts')
 
 </body>
 </html>

@@ -40,6 +40,47 @@
 
         <div class="menu-divider"></div>
 
+        {{-- Media CRUDs --}}
+        <div class="menu-section">Media CRUDs</div>
+        <div class="menu-item">
+            <a href="{{ route('developer.media.images.index') }}" class="menu-link {{ request()->routeIs('developer.media.images.*') ? 'active' : '' }}">
+                <i class="bi bi-image"></i> Single Image
+                <span class="badge bg-primary bg-opacity-10 text-primary ms-auto" style="font-size:.65rem;">Doka</span>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="{{ route('developer.media.gallery.index') }}" class="menu-link {{ request()->routeIs('developer.media.gallery.*') ? 'active' : '' }}">
+                <i class="bi bi-images"></i> Image Gallery
+                <span class="badge bg-success bg-opacity-10 text-success ms-auto" style="font-size:.65rem;">Multi</span>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="{{ route('developer.media.documents.index') }}" class="menu-link {{ request()->routeIs('developer.media.documents.*') ? 'active' : '' }}">
+                <i class="bi bi-file-earmark-text"></i> Documents
+                <span class="badge bg-info bg-opacity-10 text-info ms-auto" style="font-size:.65rem;">PDF/DOC</span>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="{{ route('developer.media.archives.index') }}" class="menu-link {{ request()->routeIs('developer.media.archives.*') ? 'active' : '' }}">
+                <i class="bi bi-file-earmark-zip"></i> Archives
+                <span class="badge bg-warning bg-opacity-10 text-warning ms-auto" style="font-size:.65rem;">ZIP/RAR</span>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="{{ route('developer.media.audios.index') }}" class="menu-link {{ request()->routeIs('developer.media.audios.*') ? 'active' : '' }}">
+                <i class="bi bi-music-note-beamed"></i> Audio
+                <span class="badge bg-opacity-10 ms-auto" style="font-size:.65rem;background:rgba(139,92,246,0.1);color:#8b5cf6;">Sound</span>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="{{ route('developer.media.videos.index') }}" class="menu-link {{ request()->routeIs('developer.media.videos.*') ? 'active' : '' }}">
+                <i class="bi bi-camera-video"></i> Video
+                <span class="badge bg-danger bg-opacity-10 text-danger ms-auto" style="font-size:.65rem;">Player</span>
+            </a>
+        </div>
+
+        <div class="menu-divider"></div>
+
         {{-- Documentation --}}
         <div class="menu-section">Documentation</div>
         <div class="menu-item">
